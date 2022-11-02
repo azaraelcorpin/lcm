@@ -1,0 +1,29 @@
+2022-11-02 14:47:22.439  INFO 13024 --- [restartedMain] com.ems.lcm.LcmApplication               : Starting LcmApplication using Java 17.0.4.1 on DESKTOP-SGQP2J6 with PID 13024 (C:\Users\SHEM-ICTO\Documents\dev PROJECTS\employee management system (ems)\lcm\target\classes started by SHEM-ICTO in C:\Users\SHEM-ICTO\Documents\dev PROJECTS\employee management system (ems)\lcm)
+2022-11-02 14:47:22.440  INFO 13024 --- [restartedMain] com.ems.lcm.LcmApplication               : No active profile set, falling back to 1 default profile: "default"
+2022-11-02 14:47:22.496  INFO 13024 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-11-02 14:47:22.497  INFO 13024 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-11-02 14:47:23.131  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2022-11-02 14:47:23.136  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2022-11-02 14:47:23.147  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 JDBC repository interfaces.
+2022-11-02 14:47:23.157  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2022-11-02 14:47:23.158  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-02 14:47:23.164  INFO 13024 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2022-11-02 14:47:23.986  INFO 13024 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-02 14:47:24.004  INFO 13024 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-02 14:47:24.014  INFO 13024 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.68]
+2022-11-02 14:47:24.131  INFO 13024 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-02 14:47:24.138  INFO 13024 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1640 ms
+2022-11-02 14:47:24.367  INFO 13024 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-02 14:47:24.465  INFO 13024 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.12.Final
+2022-11-02 14:47:24.628  INFO 13024 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-02 14:47:24.729  INFO 13024 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-11-02 14:47:24.900  INFO 13024 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-11-02 14:47:24.917  INFO 13024 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL81Dialect
+2022-11-02 14:47:25.207  INFO 13024 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-02 14:47:25.217  INFO 13024 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-02 14:47:25.281  WARN 13024 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-11-02 14:47:25.877  INFO 13024 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-11-02 14:47:25.925  INFO 13024 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-02 14:47:25.941  INFO 13024 --- [restartedMain] com.ems.lcm.LcmApplication               : Started LcmApplication in 3.873 seconds (JVM running for 4.699)
+2022-11-02 14:47:25.946  INFO 13024 --- [restartedMain] com.ems.lcm.LcmApplication               : Info level log message
+2022-11-02 14:47:25.948 ERROR 13024 --- [restartedMain] com.ems.lcm.LcmApplication               : Error level log message
