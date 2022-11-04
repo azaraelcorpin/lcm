@@ -43,6 +43,7 @@ public class LeaveApplication {
     private String leaveDetails;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leave_application_id")
     private List<LeaveDate> leaveDates;
 
     //at physical leave form. Section 6.D
