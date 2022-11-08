@@ -28,4 +28,5 @@ public class LeaveDate {
     @Column(name = "offset_to",nullable = true)
     private String offsetTo;
     
+    private String transactionReferrenceId;
 }

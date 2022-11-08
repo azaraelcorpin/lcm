@@ -18,5 +18,8 @@ public class LeaveType {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "number_of_days")
+    private int numberOfDays;
         
 }

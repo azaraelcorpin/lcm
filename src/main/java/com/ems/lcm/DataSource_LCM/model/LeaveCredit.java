@@ -17,10 +17,13 @@ public class LeaveCredit {
     // private Long id;
 
     @Id
+    @Column(name = "emp_id")
     private String empId;
 
+    @Column(name = "total_vl_earned",nullable = false)
     private Double totalVlEarned;
     
+    @Column(name = "total_sl_earned",nullable = false)
     private Double totalSlEarned;
 
 }
