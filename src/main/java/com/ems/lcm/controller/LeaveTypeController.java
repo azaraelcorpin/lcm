@@ -33,28 +33,6 @@ public class LeaveTypeController {
     @Autowired
     private LeaveTypeServices leaveTypeServices;
 
-
-    @GetMapping(path = "test")
-    public ResponseEntity<Object> test(){
-        System.out.println("Testing only");
-        LeaveType temp = new LeaveType();
-        temp.setId(Long.valueOf("2"));
-        temp.setCode("testCode");
-        temp.setDescription("testDesc");
-        temp.setNumberOfDays(10);
-        List<LeaveType>list = new ArrayList<>();
-        list.add(temp);
-
-        try {
-            
-            return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "ForeignKey Constraint",list),HttpStatus.BAD_REQUEST);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        } 
-    }
-
     @PostMapping(path = "search")
     public ResponseEntity<Object> searchLeaveType(@RequestBody Map<String,Object> params){
         //insert here for authentication from request header! value=authorization.

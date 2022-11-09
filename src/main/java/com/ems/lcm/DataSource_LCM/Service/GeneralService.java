@@ -30,6 +30,17 @@ public class GeneralService {
         }
     }
 
+
+    public String renderJsonResponse(String statusCode,String message,String ObjectName,String entityIdentifier) throws JSONException{
+        JSONObject resp = new JSONObject();
+
+            resp.put("statusCode", statusCode);
+            resp.put("message", message);
+            resp.put(ObjectName,entityIdentifier);
+            return resp.toString();
+
+    }
+
     public String renderJsonResponse(String statusCode,String message,Object obj) throws JSONException{
         JSONObject resp = new JSONObject();
 

@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class LeaveDate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "leave_application_id")
@@ -28,5 +28,6 @@ public class LeaveDate {
     @Column(name = "offset_to",nullable = true)
     private String offsetTo;
     
+    @Column(name = "transaction_referrence_id",nullable = false)
     private String transactionReferrenceId;
 }

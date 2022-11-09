@@ -2,9 +2,7 @@ package com.ems.lcm.DataSource_LCM.Service;
 
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.ems.lcm.LcmApplication;
 import com.ems.lcm.DataSource_LCM.model.LeaveType;
 import com.ems.lcm.DataSource_LCM.repository.LeaveApplicationRepository;
 import com.ems.lcm.DataSource_LCM.repository.LeaveTypeRepository;
@@ -62,7 +59,7 @@ public class LeaveTypeServices {
     @Transactional("LcmTransactionManager")
     public ResponseEntity<Object> updateLeaveType(@RequestBody Map<String,Object> params){
         try{
-            Long id = (Long)(params.get("id"));
+            Long id = Long.valueOf(params.get("id").toString());
             String code = generalService.getString(params.get("code"));        
             String description = generalService.getString(params.get("description"));
             int numberOfDays = (Integer)(params.get("numberOfDays"));
@@ -88,7 +85,7 @@ public class LeaveTypeServices {
     @Transactional("LcmTransactionManager")
     public ResponseEntity<Object> deleteLeaveType(@RequestBody Map<String,Object> params){
         try{
-            Long id = (Long)(params.get("id"));
+            Long id = Long.valueOf(params.get("id").toString());
             
             if(!leaveApplicationRepository.hasLeaveType(id).isEmpty())
                 return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "ForeignKey Constraint"),HttpStatus.BAD_REQUEST);              

@@ -13,7 +13,7 @@ import lombok.Data;
 
 public class LeaveCreditTransaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "emp_id")
@@ -38,9 +38,9 @@ public class LeaveCreditTransaction {
     @Column(name = "date_posted")
     private Date datePosted;
 
-    @OneToOne(fetch=FetchType.LAZY,targetEntity = LeaveApplication.class)
-    @JoinColumn(name = "transaction_referrence_id", referencedColumnName = "transaction_referrence_id",nullable = true)
-    private String transaction_referrence_id;
+
+    @Column(name = "transaction_referrence_id")
+    private String transactionReferrenceId;
 
     @Column(name = "posted_by")
     private String postedBy;

@@ -27,8 +27,8 @@ public interface LeaveTypeRepository extends JpaRepository<LeaveType,Long>{
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))
     @Query(value = "SELECT * FROM leave_type WHERE "+
-    " :code IS NULL OR code LIKE %:code% "+
-    " AND :description IS NULL OR description LIKE %:description% ",nativeQuery = true)
+    " (:code IS NULL OR code LIKE :code% )"+
+    " AND (:description IS NULL OR description LIKE %:description% )",nativeQuery = true)
     Page <LeaveType> searchLeaveType(
         @Param("code")String code,
         @Param("description") String description,

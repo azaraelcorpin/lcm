@@ -13,7 +13,7 @@ import lombok.Data;
 
 public class LeaveApplication {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "emp_id")
@@ -34,7 +34,7 @@ public class LeaveApplication {
     @Column(name = "position", nullable = true)
     private String position;
 
-    @Column(name = "salary", nullable = false)
+    @Column(name = "salary", nullable = true)
     private BigDecimal salary = BigDecimal.ZERO;
     
     @Column(name = "application_date", nullable = false)
@@ -43,9 +43,8 @@ public class LeaveApplication {
     @Column(name = "transaction_referrence_id", nullable = true,unique = true)
     private String transactionReferrenceId;
 
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "leave_type_id", referencedColumnName = "id")
-    private LeaveType leaveType;
+    @Column(name = "leave_type_id")
+    private Long leaveTypeId;
 
     @Column(name = "others_leave_type", nullable = true)
     private String othersLeaveType;
@@ -53,25 +52,24 @@ public class LeaveApplication {
     @Column(name = "leave_details")
     private String leaveDetails;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leave_application_id")
-    private List<LeaveDate> leaveDates;
+    // @Column(name = "leave_application_id")
+    // private List<LeaveDate> leaveDates;
 
     //at physical leave form. Section 6.D
     //posible value  [requested, not requested]
     @Column(name = "commutation", nullable = true)
     private String commutation;
 
-    @Column(name = "total_vl_earned",nullable = false)
+    @Column(name = "total_vl_earned",nullable = true)
     private Double totalVlEarned;
     
-    @Column(name = "total_sl_earned",nullable = false)
+    @Column(name = "total_sl_earned",nullable = true)
     private Double totalSlEarned;
 
-    @Column(name = "applied_vl_amount",nullable = false)
+    @Column(name = "applied_vl_amount",nullable = true)
     private Double appliedVlAmount;
 
-    @Column(name = "applied_sl_amount",nullable = false)
+    @Column(name = "applied_sl_amount",nullable = true)
     private Double appliedSlAmount;
 
     @Column(name = "certified_By",nullable = true)
