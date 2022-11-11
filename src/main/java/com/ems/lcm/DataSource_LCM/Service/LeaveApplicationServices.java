@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,6 +74,7 @@ public class LeaveApplicationServices {
             Long leaveTypeId = Long.valueOf(params.get("leaveTypeId").toString());
             String othersLeaveType = params.get("othersLeaveType").toString();
             String leaveDetails = params.get("leaveDetails").toString();
+            String leaveDates = params.get("leaveDates").toString();
             List<Date> list = new Gson().fromJson(params.get("leaveDates").toString(), new TypeToken<List<Date>>() {}.getType());
             String commutation = params.get("commutation").toString();
             String transactionReferrenceId = params.get("transactionReferrenceId").toString();
@@ -85,9 +92,9 @@ public class LeaveApplicationServices {
             leaveApplication.setLeaveDetails(leaveDetails);
             leaveApplication.setCommutation(commutation);
             leaveApplication.setTransactionReferrenceId(transactionReferrenceId);
+            leaveApplication.setLeaveDates(leaveDates);
             leaveApplicationRepository.save(leaveApplication);
             //saving leavedates
-            List<LeaveDate> leaveDates = new ArrayList<>();
             for (Date date : list) {
                 LeaveDate leaveDate = new LeaveDate();
                 leaveDate.setDate(date);
@@ -106,71 +113,128 @@ public class LeaveApplicationServices {
         }
     }
 
-    // @Transactional("LcmTransactionManager")
-    // public ResponseEntity<Object> updateLeaveType(@RequestBody Map<String,Object> params){
-    //     try{
-    //         Long id = Long.valueOf(params.get("id").toString());
-    //         String code = generalService.getString(params.get("code"));        
-    //         String description = generalService.getString(params.get("description"));
-    //         int numberOfDays = (Integer)(params.get("numberOfDays"));
-    //         if(code == null | description == null)
-    //             return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST);              
+    @Transactional("LcmTransactionManager")
+    public ResponseEntity<Object> updateLeaveApplication(@RequestBody Map<String,Object> params){
+        try{
+            Long id = Long.valueOf(params.get("id").toString());
+            String empId =  params.get("empId").toString();
+            String department = params.get("department").toString();
+            String lastname = params.get("lastname").toString();
+            String firstname = params.get("firstname").toString();
+            String middlename = params.get("middlename").toString();
+            String position = params.get("position").toString();
+            BigDecimal salary = BigDecimal.valueOf(Double.parseDouble( params.get("salary").toString()));
+            Long leaveTypeId = Long.valueOf(params.get("leaveTypeId").toString());
+            String othersLeaveType = params.get("othersLeaveType").toString();
+            String leaveDetails = params.get("leaveDetails").toString();
+            String leaveDates = params.get("leaveDates").toString();
+            List<Date> list = new Gson().fromJson(params.get("leaveDates").toString(), new TypeToken<List<Date>>() {}.getType());
+            String commutation = params.get("commutation").toString();
+            String transactionReferrenceId = params.get("transactionReferrenceId").toString();
 
-    //         LeaveType leaveType = new LeaveType();
-    //         leaveType.setId(id);
-    //         leaveType.setCode(code);
-    //         leaveType.setDescription(description);
-    //         leaveType.setNumberOfDays(numberOfDays);
-    //         leaveTypeRepository.save(leaveType);
+            LeaveApplication leaveApplication = new LeaveApplication();
+            leaveApplication.setId(id);
+            leaveApplication.setEmpId(empId);
+            leaveApplication.setDepartment(department);
+            leaveApplication.setLastname(lastname);
+            leaveApplication.setFirstname(firstname);
+            leaveApplication.setMiddlename(middlename);
+            leaveApplication.setPosition(position);
+            leaveApplication.setSalary(salary);
+            leaveApplication.setLeaveTypeId(leaveTypeId);
+            leaveApplication.setOthersLeaveType(othersLeaveType);
+            leaveApplication.setLeaveDetails(leaveDetails);
+            leaveApplication.setCommutation(commutation);
+            leaveApplication.setTransactionReferrenceId(transactionReferrenceId);
+            leaveApplication.setLeaveDates(leaveDates);
+            leaveApplicationRepository.save(leaveApplication);
+            //removing old dates list
+                leaveDateRepository.deleteAllByLeaveApplicationId(id);
+            //saving new leavedates
+            for (Date date : list) {
+                LeaveDate leaveDate = new LeaveDate();
+                leaveDate.setDate(date);
+                leaveDate.setOffsetTo(getOffset(leaveTypeId));
+                leaveDate.setTransactionReferrenceId(transactionReferrenceId);
+                leaveDate.setLeaveApplicationId(id);
+                leaveDateRepository.save(leaveDate);
+            }
 
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("201", "Success",leaveType),
-    //         HttpStatus.CREATED);
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Success",leaveApplication),
+            HttpStatus.OK);
 
-    //     }catch(Exception e){
-    //         log.error(e.getMessage());
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    // @Transactional("LcmTransactionManager")
-    // public ResponseEntity<Object> deleteLeaveType(@RequestBody Map<String,Object> params){
-    //     try{
-    //         Long id = Long.valueOf(params.get("id").toString());
+    @Transactional("LcmTransactionManager")
+    public ResponseEntity<Object> deleteLeaveApplication(@RequestBody Map<String,Object> params){
+        try{
+            Long id = Long.valueOf(params.get("id").toString());
+            Optional<LeaveApplication> o = leaveApplicationRepository.findById(id);
+            LeaveApplication l = o.get();
+            if(l.getStatus()!="APPLIED" && l.getStatus()!="INVALID")
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid Status value"),HttpStatus.BAD_REQUEST);              
             
-    //         if(!leaveApplicationRepository.hasLeaveType(id).isEmpty())
-    //             return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "ForeignKey Constraint"),HttpStatus.BAD_REQUEST);              
-
-    //         leaveTypeRepository.deleteById(id);
-
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Success"),
-    //         HttpStatus.OK);
-
-    //     }catch(Exception e){
-    //         log.error(e.getMessage());
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
-
-    // @Transactional("LcmTransactionManager")
-    // public ResponseEntity<Object> searchLeaveType(@RequestBody Map<String,Object> params){
-    //     try{
-    //         String code = generalService.getString(params.get("code"));        
-    //         String description = generalService.getString(params.get("description"));
+            //remove list of dates
+            leaveDateRepository.deleteAllByLeaveApplicationId(id);
             
-    //         //Paging
-    //         int pageNo = (Integer)(params.get("pageNo"));
-    //         int pageSize = (Integer)(params.get("pageSize"));
+            leaveApplicationRepository.deleteById(id);
 
-    //         Pageable limit = pageSize == 0?Pageable.unpaged():PageRequest.of(pageNo,pageSize,Sort.by("code").ascending());
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Successfully Deleted",l),
+            HttpStatus.OK);
 
-    //         Page<LeaveType> leaveTypes = leaveTypeRepository.searchLeaveType(code, description, limit);
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Success","leaveTypes",leaveTypes),
-    //         HttpStatus.OK);
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    //     }catch(Exception e){
-    //         log.error(e.getMessage());
-    //         return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }    
+    @Transactional("LcmTransactionManager")
+    public ResponseEntity<Object> searchLeaveApplication(@RequestBody Map<String,Object> params){
+        try{
+            String empId =  params.get("empId").toString();
+            Date dateFrom = (Date) params.get("empId");
+            Date dateTo = (Date) params.get("dateTo");
+            String transactionReferrenceId =  params.get("transactionReferrenceId").toString();
+            String department =  params.get("department").toString();
+            String position =  params.get("position").toString();
+            String employeeName =  params.get("employeeName").toString();
+            Long leaveTypeId =  Long.parseLong(params.get("leaveTypeId").toString());
+            String leaveDetails =  params.get("leaveDetails").toString();
+            String leaveDate = params.get("leaveDate").toString();
+            String commutation =  params.get("commutation").toString();
+            String status =  params.get("status").toString();
+                        
+            //Paging
+            int pageNo = (Integer)(params.get("pageNo"));
+            int pageSize = (Integer)(params.get("pageSize"));
+
+            Pageable limit = pageSize == 0?Pageable.unpaged():PageRequest.of(pageNo,pageSize,Sort.by("application_date").ascending());
+
+            Page<LeaveApplication> leaveApplications = leaveApplicationRepository.searchLeaveApplications(
+                empId,
+                dateFrom,
+                dateTo,
+                transactionReferrenceId,
+                department,
+                position,
+                employeeName,
+                leaveTypeId,
+                leaveDetails,
+                leaveDate,
+                commutation,
+                status,
+                limit);
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Success","leaveApplications",leaveApplications),
+            HttpStatus.OK);
+
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }    
 
 }

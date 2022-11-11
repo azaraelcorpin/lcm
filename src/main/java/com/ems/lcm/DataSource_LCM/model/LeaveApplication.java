@@ -52,8 +52,8 @@ public class LeaveApplication {
     @Column(name = "leave_details")
     private String leaveDetails;
 
-    // @Column(name = "leave_application_id")
-    // private List<LeaveDate> leaveDates;
+    @Column(name = "leave_dates")
+    private String leaveDates;
 
     //at physical leave form. Section 6.D
     //posible value  [requested, not requested]

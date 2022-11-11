@@ -1,7 +1,9 @@
 package com.ems.lcm.DataSource_LCM.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,4 +95,15 @@ public class GeneralService {
     public Integer toInteger(String value){
         return value!=null?value.isEmpty()?null:(Integer.parseInt(value)):null;
     }
+
+    // public Date getDate(Object value){
+    //     if(value == null)
+    //         return null;
+    //     String dateString = value.toString();
+    //     if(dateString.isEmpty())
+    //         return null;
+    
+            
+    
+    // }
 }

@@ -73,8 +73,8 @@ public class LeaveTypeServices {
             leaveType.setNumberOfDays(numberOfDays);
             leaveTypeRepository.save(leaveType);
 
-            return new ResponseEntity<Object>(generalService.renderJsonResponse("201", "Success",leaveType),
-            HttpStatus.CREATED);
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("200", "Success",leaveType),
+            HttpStatus.OK);
 
         }catch(Exception e){
             log.error(e.getMessage());

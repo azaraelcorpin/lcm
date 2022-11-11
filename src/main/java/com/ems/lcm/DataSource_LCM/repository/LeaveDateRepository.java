@@ -15,5 +15,7 @@ public interface LeaveDateRepository extends JpaRepository<LeaveDate,Long>{
     // LeaveDate findByEmpId(String empId);
 
     List<LeaveDate> findAll();
+
+    void deleteAllByLeaveApplicationId(Long leaveApplicationId);
     
 }
