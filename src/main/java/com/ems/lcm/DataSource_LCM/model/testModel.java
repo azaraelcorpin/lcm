@@ -2,7 +2,6 @@ package com.ems.lcm.DataSource_LCM.model;
 
 import javax.persistence.*;
 import lombok.Data;
-import java.util.Date;
 
 @Data
 @Entity

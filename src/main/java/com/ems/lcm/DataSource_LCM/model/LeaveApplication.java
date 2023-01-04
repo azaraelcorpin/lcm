@@ -1,9 +1,6 @@
 package com.ems.lcm.DataSource_LCM.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-
 import javax.persistence.*;
 import lombok.Data;
 
@@ -18,29 +15,11 @@ public class LeaveApplication {
 
     @Column(name = "emp_id")
     private String empId;
-
-    @Column(name = "department", nullable = false)
-    private String department;
-
-    @Column(name = "lastname", nullable = false)
-    private String lastname;
-
-    @Column(name = "firstname", nullable = false)
-    private String firstname;
-
-    @Column(name = "middlename", nullable = true)
-    private String middlename;
-
-    @Column(name = "position", nullable = true)
-    private String position;
-
-    @Column(name = "salary", nullable = true)
-    private BigDecimal salary = BigDecimal.ZERO;
     
     @Column(name = "application_date", nullable = false)
     private Date applicationDate;
 
-    @Column(name = "transaction_referrence_id", nullable = true,unique = true)
+    @Column(name = "transaction_referrence_id", nullable = false,unique = true)
     private String transactionReferrenceId;
 
     @Column(name = "leave_type_id")
@@ -53,12 +32,12 @@ public class LeaveApplication {
     private String leaveDetails;
 
     @Column(name = "leave_dates")
-    private String leaveDates;
+    private String leaveDates = "";
 
     //at physical leave form. Section 6.D
     //posible value  [requested, not requested]
-    @Column(name = "commutation", nullable = true)
-    private String commutation;
+    @Column(name = "commutation")
+    private String commutation = "";
 
     @Column(name = "total_vl_earned",nullable = true)
     private Double totalVlEarned;
@@ -99,8 +78,27 @@ public class LeaveApplication {
     @Column(name = "approval_date",nullable = true)
     private Date approvalDate;
 
-    //posible value [APPLIED,CERTIFIED|INVALID, RECOMMENDEDATION,APPROVED|REJECTED]
-    private String status;
+    //posible value [APPLIED,CERTIFIED|INVALID, RECOMMENDED,APPROVED|REJECTED]
+    private String status = "APPLIED";
 
+    @Column(name = "remarks",nullable = true)
     private String remarks;
+
+    @Column(name = "number_of_days",nullable = true)
+    private String numberOfDays;
+
+    @Transient //@transient - annotates that this attribute must not reflect to the database
+    public static final String STATUS_APPLIED = "APPLIED";
+
+    @Transient //@transient - annotates that this attribute must not reflect to the database
+    public static final String STATUS_INVALID = "INVALID";
+
+    @Transient //@transient - annotates that this attribute must not reflect to the database
+    public static final String STATUS_CERTIFIED = "CERTIFIED";
+
+    @Transient //@transient - annotates that this attribute must not reflect to the database
+    public static final String STATUS_RECOMMENDED = "RECOMMENDED";
+
+    @Transient //@transient - annotates that this attribute must not reflect to the database
+    public static final String STATUS_APPROVED = "APPROVED";
 }

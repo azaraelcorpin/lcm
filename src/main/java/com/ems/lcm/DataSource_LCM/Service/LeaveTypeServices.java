@@ -10,11 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ems.lcm.DataSource_LCM.model.LeaveType;
-import com.ems.lcm.DataSource_LCM.repository.LeaveApplicationRepository;
 import com.ems.lcm.DataSource_LCM.repository.LeaveTypeRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,21 +26,18 @@ public class LeaveTypeServices {
     private LeaveTypeRepository leaveTypeRepository;
 
     @Autowired
-    private LeaveApplicationRepository leaveApplicationRepository;
-
-    @Autowired
     private GeneralService generalService;
 
 
-    @Transactional("LcmTransactionManager")
+    @Transactional(value = "LcmTransactionManager",propagation = Propagation.NEVER)//https://www.baeldung.com/spring-transactional-propagation-isolation
     public ResponseEntity<Object> createLeaveType(@RequestBody Map<String,Object> params){
         try{
-            String code = generalService.getString(params.get("code"));        
-            String description = generalService.getString(params.get("description"));
-            int numberOfDays = (Integer)(params.get("numberOfDays"));
+            String code = generalService.getString(params.get("code")).trim();        
+            String description = generalService.getString(params.get("description")).trim();
+            int numberOfDays = Integer.parseInt(params.get("numberOfDays").toString());
             if(code == null | description == null)
                 return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST);              
-
+            
             LeaveType leaveType = new LeaveType();
             leaveType.setCode(code);
             leaveType.setDescription(description);
@@ -51,18 +48,27 @@ public class LeaveTypeServices {
             HttpStatus.CREATED);
 
         }catch(Exception e){
-            log.error(e.getMessage());
-            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+            Throwable cause = e.getCause();
+            String error_message="";
+            while (cause.getCause() != null) {
+                error_message = cause.getCause().getMessage();
+                cause = cause.getCause();
+            }
+            log.error(error_message);
+            if(error_message.contains("Duplicate entry")){
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", error_message.split("for key")[0]),HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", error_message),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Transactional("LcmTransactionManager")
+    @Transactional(value = "LcmTransactionManager",propagation = Propagation.NEVER)//https://www.baeldung.com/spring-transactional-propagation-isolation
     public ResponseEntity<Object> updateLeaveType(@RequestBody Map<String,Object> params){
         try{
             Long id = Long.valueOf(params.get("id").toString());
-            String code = generalService.getString(params.get("code"));        
-            String description = generalService.getString(params.get("description"));
-            int numberOfDays = (Integer)(params.get("numberOfDays"));
+            String code = generalService.getString(params.get("code")).trim();        
+            String description = generalService.getString(params.get("description")).trim();
+            int numberOfDays = Integer.parseInt(params.get("numberOfDays").toString());
             if(code == null | description == null)
                 return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST);              
 
@@ -77,18 +83,27 @@ public class LeaveTypeServices {
             HttpStatus.OK);
 
         }catch(Exception e){
-            log.error(e.getMessage());
-            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+            Throwable cause = e.getCause();
+            String error_message="";
+            while (cause.getCause() != null) {
+                error_message = cause.getCause().getMessage();
+                cause = cause.getCause();
+            }
+            log.error(error_message);
+            if(error_message.contains("Duplicate entry")){
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", error_message.split("for key")[0]),HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", error_message),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Transactional("LcmTransactionManager")
+    @Transactional(value = "LcmTransactionManager",propagation = Propagation.NEVER)//https://www.baeldung.com/spring-transactional-propagation-isolation
     public ResponseEntity<Object> deleteLeaveType(@RequestBody Map<String,Object> params){
         try{
             Long id = Long.valueOf(params.get("id").toString());
             
-            if(!leaveApplicationRepository.hasLeaveType(id).isEmpty())
-                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "ForeignKey Constraint"),HttpStatus.BAD_REQUEST);              
+            // if(!leaveApplicationRepository.hasLeaveType(id).isEmpty())
+            //     return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "ForeignKey Constraint"),HttpStatus.BAD_REQUEST);              
 
             leaveTypeRepository.deleteById(id);
 
@@ -96,8 +111,17 @@ public class LeaveTypeServices {
             HttpStatus.OK);
 
         }catch(Exception e){
-            log.error(e.getMessage());
-            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
+            Throwable cause = e.getCause();
+            String error_message="";
+            while (cause.getCause() != null) {
+                error_message = cause.getCause().getMessage();
+                cause = cause.getCause();
+            }
+            log.error(error_message);
+            if(error_message.contains("foreign key constraint fails")){
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400",error_message.split("or update")[0]+" [Referrence Constraints]"),HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<Object>(generalService.renderJsonResponse("500", error_message),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ems.lcm.DataSource_LCM.model.LeaveCreditTransaction;
 
 
-public interface LeaveTransactionRepository extends JpaRepository<LeaveCreditTransaction,Long>{
+public interface LeaveCreditTransactionRepository extends JpaRepository<LeaveCreditTransaction,Long>{
     
     Optional<LeaveCreditTransaction> findById(Long id);
 

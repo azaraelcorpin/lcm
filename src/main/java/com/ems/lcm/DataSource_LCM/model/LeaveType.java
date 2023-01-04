@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "leave_type" ,schema = "test")
+@Table(name = "leave_type" ,schema = "test",uniqueConstraints={@UniqueConstraint(columnNames={"code"})})
 
 public class LeaveType {
 

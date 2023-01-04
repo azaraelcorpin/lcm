@@ -2,6 +2,7 @@ package com.ems.lcm.DataSource_LCM.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.QueryHint;
@@ -38,7 +39,7 @@ public interface LeaveApplicationRepository extends JpaRepository<LeaveApplicati
     +" AND (:employeeName IS NULL OR (lastname LIKE %:employeeName% OR firstname LIKE %:employeeName% OR middlename LIKE %:employeeName%) )"
     +" AND (:leaveTypeId IS NULL OR leave_type_id = :leaveTypeId )"
     +" AND (:leaveDetails IS NULL OR leave_details LIKE %:leaveDetails% )"
-    +" AND (:leaveDate IS NULL OR leaveDates LIKE %:leaveDate% )"
+    +" AND (:leaveDate IS NULL OR leave_dates LIKE %:leaveDate% )"
     +" AND (:commutation IS NULL OR commutation LIKE %:commutation% )"
     +" AND (:status IS NULL OR status LIKE %:status% )"
     ,nativeQuery = true)
@@ -57,4 +58,51 @@ public interface LeaveApplicationRepository extends JpaRepository<LeaveApplicati
         @Param("status")String status,
         Pageable pageable 
         );
+
+        @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))
+        @Query(value = "SELECT a.*,t.code FROM leave_application a, leave_type t, leave_credit c WHERE "+
+        " a.leave_type_id = t.id AND a.emp_id = c.emp_id"
+        +" AND (:dateFrom IS NULL OR a.application_date >= :dateFrom )"
+        +" AND (:dateTo IS NULL OR a.application_date <= :dateTo )"
+        +" AND (:transactionReferrenceId IS NULL OR a.transaction_referrence_id LIKE %:transactionReferrenceId% )"
+        +" AND (:department IS NULL OR c.department LIKE %:department% )"
+        +" AND (:position IS NULL OR c.position LIKE %:position% )"
+        +" AND (:employeeName IS NULL OR (c.lastname LIKE %:employeeName% OR c.firstname LIKE %:employeeName% OR c.middlename LIKE %:employeeName%) )"
+        +" AND (:leaveTypeId IS NULL OR a.leave_type_id = :leaveTypeId )"
+        +" AND (:leaveDetails IS NULL OR a.leave_details LIKE %:leaveDetails% )"
+        +" AND (:leaveDate IS NULL OR a.leave_dates LIKE %:leaveDate% )"
+        +" AND (:commutation IS NULL OR a.commutation LIKE %:commutation% )"
+        +" AND (:status IS NULL OR a.status LIKE %:status% )"
+        +" AND  (:empId IS NULL OR a.emp_id LIKE :empId% )",
+        countQuery = "SELECT COUNT(*) FROM leave_application a, leave_type t, leave_credit c WHERE "+  ///countQuery is required for pageable response
+        " a.leave_type_id = t.id AND a.emp_id = c.emp_id"
+        +" AND (:dateFrom IS NULL OR a.application_date >= :dateFrom )"
+        +" AND (:dateTo IS NULL OR a.application_date <= :dateTo )"
+        +" AND (:transactionReferrenceId IS NULL OR a.transaction_referrence_id LIKE %:transactionReferrenceId% )"
+        +" AND (:department IS NULL OR c.department LIKE %:department% )"
+        +" AND (:position IS NULL OR c.position LIKE %:position% )"
+        +" AND (:employeeName IS NULL OR (c.lastname LIKE %:employeeName% OR c.firstname LIKE %:employeeName% OR c.middlename LIKE %:employeeName%) )"
+        +" AND (:leaveTypeId IS NULL OR a.leave_type_id = :leaveTypeId )"
+        +" AND (:leaveDetails IS NULL OR a.leave_details LIKE %:leaveDetails% )"
+        +" AND (:leaveDate IS NULL OR a.leave_dates LIKE %:leaveDate% )"
+        +" AND (:commutation IS NULL OR a.commutation LIKE %:commutation% )"
+        +" AND (:status IS NULL OR a.status LIKE %:status% )"
+        +" AND  (:empId IS NULL OR a.emp_id LIKE :empId% )"
+        ,nativeQuery = true)
+        Page <Map<String,Object>> searchLeaveApplications_(
+            @Param("empId")String empId,
+            @Param("dateFrom")Date dateFrom,
+            @Param("dateTo")Date dateTo,
+            @Param("transactionReferrenceId")String transactionReferrenceId,
+            @Param("department")String department,
+            @Param("position")String position,
+            @Param("employeeName")String employeeName,
+            @Param("leaveTypeId")Long leaveTypeId,
+            @Param("leaveDetails")String leaveDetails,
+            @Param("leaveDate")String leaveDate,
+            @Param("commutation")String commutation,
+            @Param("status")String status,
+            Pageable pageable 
+            );    
+
 }
