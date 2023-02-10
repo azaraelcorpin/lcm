@@ -59,7 +59,11 @@ public class LeaveCreditServices {
                                                                //(leave credit balance from physical document No. as of date....)
             String transactionReferrenceId = params.get("transactionReferrenceId").toString();
             if(empID == null | firstname == null | lastname == null | position == null |department == null )
-                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST);              
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST);
+            
+            if(leaveCreditRepository.findByEmpId(empID).isPresent())
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Employee ID Already Exist."),HttpStatus.BAD_REQUEST);
+                      
 
             //registering into leave_credit table
             LeaveCredit leaveCredit =  new LeaveCredit();
@@ -122,7 +126,10 @@ public class LeaveCreditServices {
 
             if(empID == null | firstname == null | lastname == null | position == null |department == null )
                 return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Invalid value"),HttpStatus.BAD_REQUEST); 
-            
+            if(empID != id){
+                if(leaveCreditRepository.findByEmpId(empID).isPresent())
+                return new ResponseEntity<Object>(generalService.renderJsonResponse("400", "Employee ID Already Exist."),HttpStatus.BAD_REQUEST);
+            }
             Optional <LeaveCredit> item= leaveCreditRepository.findByEmpId(id);
             LeaveCredit oldLeaveCredit = item.get();
             Double prevSlBalance = oldLeaveCredit.getTotalSlEarned();
